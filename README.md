@@ -1,6 +1,4 @@
-
-https://github.com/user-attachments/assets/ef636cea-f79a-4dac-b9e9-ce9ca226b4f4
-## 🚆 **What You’ve Made:**
+## 🚆 ** Project :**
 Created a **Train Seat Reservation System** using **Flask (Python)** and **MongoDB** as a backend database.
 
 This system:
