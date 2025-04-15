@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('home') }}">Logout</a>
+    </nav>
+    <div class="container">
+      <h2>User Dashboard</h2>
+      <div class="section">
+        <h3>Available Tickets</h3>
+        <form action="{{ url_for('book') }}" method="post">
+          <input type="hidden" name="timestamp" value="{{ request.timestamp }}"/>
+          <div class="seat-grid">
+            {% for seat in tickets[0].seats %}
+              {% if not seat.is_booked %}
+                <div class="seat-block">
+                  <input type="checkbox" name="seats[]" value="{{ seat.block }}" id="{{ seat.block }}">
+                  <label for="{{ seat.block }}">{{ seat.block }}</label>
+                </div>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <button type="submit">Book Selected Seats</button>
+        </form>
+        
+        <h3>My Booked Seats</h3>
+        <div class="booked-seats">
+          {% for seat in tickets[0].seats %}
+            {% if seat.is_booked and seat.booked_by == session.username %}
+              <div class="seat-block booked">
+                {{ seat.block }}
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="section">
+        <h3>My Bookings</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Ticket ID</th>
+              <th>Number of Tickets</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ booking._id }}</td>
+              <td>
+                <div class="seat-details">
+                  {% for seat in booking.seats %}
+                    <div class="seat-block">
+                      {{ seat }}
+                      <input type="checkbox" name="cancel_seats" value="{{ seat }}" form="cancel_form_{{ booking._id }}">
+                    </div>
+                  {% endfor %}
+                </div>
+              </td>
+              <td>{{ booking.seats|length }}</td>
+              <td>
+                <form id="cancel_form_{{ booking._id }}" action="{{ url_for('cancel') }}" method="post">
+                  <input type="hidden" name="booking_id" value="{{ booking._id }}"/>
+                  {% if booking.seats %}
+                    <button type="submit">Cancel Selected</button>
+                  {% endif %}
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

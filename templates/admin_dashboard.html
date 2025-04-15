@@ -1,0 +1,67 @@
+<!-- filepath: /c:/DSLAB4/Ticketting System/NewApp/templates/admin_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
+  <body>
+    <nav>
+      <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      <a href="{{ url_for('add_user') }}">Add User</a>
+      <a href="{{ url_for('home') }}">Logout</a>
+    </nav>
+    <div class="container">
+      <h2>Admin Dashboard</h2>
+      <div class="section">
+        <h3>Bookings</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Username</th>
+              <th>Seats</th>
+              <th>Number of Tickets</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for booking in bookings %}
+            <tr>
+              <td>{{ booking._id }}</td>
+              <td>{{ booking.username }}</td>
+              <td>
+                {% for seat in booking.seats %}
+                  {{ seat }}
+                {% endfor %}
+              </td>
+              <td>{{ booking.seats|length }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="section">
+        <h3>Set Total Tickets</h3>
+        <form action="{{ url_for('set_tickets') }}" method="post">
+          <input
+            type="number"
+            name="total_tickets"
+            placeholder="Total Tickets"
+            required
+          />
+          <button type="submit">Set</button>
+        </form>
+        
+        <h3>Reset All Tickets</h3>
+        <form action="{{ url_for('reset_tickets') }}" method="post">
+          <button type="submit" style="background-color: #dc3545;">Reset All Tickets</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
